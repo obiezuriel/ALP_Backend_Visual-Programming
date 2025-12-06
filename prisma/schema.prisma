@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Mood_Type{
+  HAPPY
+  SAD
+  NEUTRAL
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+
+  moods Mood[]
+  journals Journal[]
+  meditation_songs Meditation_Song[]
+
+  @@map("users")
+}
+
+model Mood {
+  id Int @id @default(autoincrement())
+  type Mood_Type
+
+  affirmations Affirmation[]
+
+  user_id Int
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("moods") 
+}
+
+model Affirmation {
+  id Int @id @default(autoincrement())
+  message String
+
+  mood_id Int
+
+  mood Mood @relation(fields: [mood_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("affirmations")
+}
+
+model Journal{
+  id Int @id @default(autoincrement())
+  date String
+  title String
+  content String
+
+  user_id Int
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("journals")
+}
+
+model Meditation_Song{
+  id Int @id @default(autoincrement())
+  title String
+  description String
+  artist String
+  duration Int
+  url_audio String
+
+  user_id Int
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("meditation_songs")
+}
+
