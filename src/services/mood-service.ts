@@ -31,7 +31,7 @@ export const MoodService = {
         return {
             id              : result.id,
             mood_type       : result.type,
-            affirmation_teks: result.affirmations[0].message,
+            affirmation_text: result.affirmations[0].message,
             created_at      : new Date()
         };
     }
