@@ -15,11 +15,11 @@ enum Mood_Type{
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
+  id    Int    @id @default(autoincrement())
+  name  String
 
-  moods Mood[]
-  journals Journal[]
+  mood_logs        Mood[] 
+  journals         Journal[]
   meditation_songs Meditation_Song[]
 
   @@map("users")
