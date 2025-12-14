@@ -7,7 +7,7 @@ export const AFFIRMATION_DATA = {
     "Energi positifmu luar biasa hari ini."
   ],
   [Mood_Type.SAD]: [
-    "Gapapa nangis, itu manusiawi.",
+    "Gapapa sedih, itu manusiawi.",
     "Badai pasti berlalu, peluk jauh!",
     "Istirahatlah, besok kita coba lagi."
   ],

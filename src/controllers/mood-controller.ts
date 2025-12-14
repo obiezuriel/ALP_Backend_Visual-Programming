@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { MoodService } from "../services/mood-service";
 import { CreateMoodRequest } from "../models/mood-model";
+import { success } from "zod";
 
 export const MoodController = {
     async create(req: Request, res: Response) {
@@ -13,11 +14,14 @@ export const MoodController = {
             const response = await MoodService.create(request);
 
             res.status(200).json({
-                data: response
+                success : true,
+                data    : response
             });
         } catch (error) {
+            console.error(error);
             res.status(500).json({
-                error: "Internal Server Error"
+                success : false,
+                message : "Internal Server Error"
             });
         }
     }
