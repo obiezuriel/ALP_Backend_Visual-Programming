@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { CreateMoodRequest, MoodResponse } from '../models/mood-model';
+import { CreateMoodRequest, MoodResponse, toMoodResponse } from '../models/mood-model';
 import { AFFIRMATION_DATA } from '../utils/affirmation-words-util';
 
 const prisma = new PrismaClient();
@@ -28,11 +28,6 @@ export const MoodService = {
                 affirmations: true
             }
         });
-        return {
-            id              : result.id,
-            mood_type       : result.type,
-            affirmation_text: result.affirmations[0].message,
-            created_at      : new Date()
-        };
+        return toMoodResponse(result);
     }
 }
