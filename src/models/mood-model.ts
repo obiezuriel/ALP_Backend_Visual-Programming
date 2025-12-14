@@ -1,6 +1,6 @@
 import { Mood_Type } from "../../generated/prisma";
 
-export interface MoodCreateRequest {
+export interface CreateMoodRequest {
     user_id         : number;
     mood_type       : Mood_Type;
 }
