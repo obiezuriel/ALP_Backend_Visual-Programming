@@ -6,18 +6,18 @@ export class MeditationService {
     return [
       {
         id: 1,
-        title: "Night Island",
+        title: "Ripples of Past Reverie",
         duration: 45,
-        description: "Ease the mind into a restful night's sleep.",
-        audioUrl: "https://example.com/audio/night-island.mp3",
-        coverImage: "https://example.com/image/night-island.png"
+        description: "A soothing meditation experience with ambient sounds.",
+        audioUrl: "http://localhost:3000/api/meditations/1/stream",
+        coverImage: "https://example.com/image/ripples-of-past-reverie.png"
       },
       {
         id: 2,
         title: "Calm Forest",
         duration: 30,
         description: "Relax with peaceful forest ambience.",
-        audioUrl: "https://example.com/audio/calm-forest.mp3",
+        audioUrl: "http://localhost:3000/api/meditations/2/stream",
         coverImage: "https://example.com/image/calm-forest.png"
       }
     ];
