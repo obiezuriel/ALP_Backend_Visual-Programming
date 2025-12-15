@@ -10,7 +10,7 @@ publicRouter.post("/journal", JournalController.createJournal);
 publicRouter.get("/journal", JournalController.getAllJournals);
 publicRouter.get("/journal/:id", JournalController.getJournalById);
 
-// Meditation routes
 publicRouter.get("/meditations", MeditationController.getAll);
 publicRouter.get("/meditations/:id", MeditationController.getById);
+
 publicRouter.post("/mood", MoodController.create);
