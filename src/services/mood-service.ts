@@ -1,8 +1,6 @@
-import { PrismaClient } from "../../generated/prisma";
-import { CreateMoodRequest, MoodResponse, toMoodResponse } from "../models/mood-model";
-import { AFFIRMATION_DATA } from "../utils/affirmation-words-util";
-
-const prisma = new PrismaClient();
+import { prismaClient } from "../utils/database-util";
+import { CreateMoodRequest, MoodResponse, toMoodResponse } from '../models/mood-model';
+import { AFFIRMATION_DATA } from '../utils/affirmation-words-util';
 
 export const MoodService = {
     async create(request: CreateMoodRequest): Promise<MoodResponse> {
@@ -14,7 +12,7 @@ export const MoodService = {
         const selectedMessage = possibleMessages[randomIndex];
 
         //simpan ke db
-        const result = await prisma.mood.create({
+        const result = await prismaClient.mood.create({
             data: {
                 user_id: request.user_id,
                 type: request.mood_type,

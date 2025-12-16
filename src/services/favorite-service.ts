@@ -1,13 +1,10 @@
-import { PrismaClient, Prisma } from "../../generated/prisma";
+import { prismaClient } from "../utils/database-util";
+import { Prisma } from "../../generated/prisma";
 import { toFavoriteResponse, FavoriteResponse } from "../models/favorite-model";
 
-const prisma = new PrismaClient();
-
 export const FavoriteService = {
-    //CREATE 
     async create(userId: number, text: string): Promise<FavoriteResponse> {
-        // Cek dulu apakah sudah ada
-        const existing = await prisma.favorite.findFirst({
+        const existing = await prismaClient.favorite.findFirst({
             where: {
                 user_id: userId,
                 affirmation_text: text
@@ -18,7 +15,7 @@ export const FavoriteService = {
             throw new Error("DUPLICATE_FAVORITE");
         }
 
-        const favorite = await prisma.favorite.create({
+        const favorite = await prismaClient.favorite.create({
             data: {
                 user_id: userId,
                 affirmation_text: text,
@@ -29,9 +26,8 @@ export const FavoriteService = {
         return toFavoriteResponse(favorite);
     },
 
-    //READ
     async getAll(userId: number): Promise<FavoriteResponse[]> {
-        const favorites = await prisma.favorite.findMany({
+        const favorites = await prismaClient.favorite.findMany({
             where: { user_id: userId },
             orderBy: { created_at: "desc" }
         });
@@ -39,10 +35,9 @@ export const FavoriteService = {
         return favorites.map(toFavoriteResponse);
     },
 
-    //UPDATE
     async updateNote(favoriteId: number, newNote: string): Promise<FavoriteResponse> {
         try {
-            const favorite = await prisma.favorite.update({
+            const favorite = await prismaClient.favorite.update({
                 where: { id: favoriteId },
                 data: { note: newNote }
             });
@@ -58,10 +53,9 @@ export const FavoriteService = {
         }
     },
 
-    //DELETE
     async delete(favoriteId: number): Promise<void> {
         try {
-            await prisma.favorite.delete({
+            await prismaClient.favorite.delete({
                 where: { id: favoriteId }
             });
         } catch (error) {
@@ -74,9 +68,8 @@ export const FavoriteService = {
         }
     },
 
-    //cek kata afirmasi udah masuk favorit
     async isFavorited(userId: number, text: string): Promise<boolean> {
-        const favorite = await prisma.favorite.findFirst({
+        const favorite = await prismaClient.favorite.findFirst({
             where: {
                 user_id: userId,
                 affirmation_text: text
