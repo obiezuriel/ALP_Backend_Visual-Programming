@@ -1,28 +1,18 @@
-import { Request, Response } from "express";
-import { MoodService } from "../services/mood-service";
+import { NextFunction, Request, Response } from "express";
 import { CreateMoodRequest } from "../models/mood-model";
-import { success } from "zod";
+import { MoodService } from "../services/mood-service";
 
-export const MoodController = {
-    async create(req: Request, res: Response) {
+export class MoodController {
+    static async create(req: Request, res: Response, next: NextFunction) {
         try {
-            const request: CreateMoodRequest = {
-                user_id     : Number(req.body.user_id), 
-                mood_type   : req.body.mood_type
-            };
+            const reqData = req.body as CreateMoodRequest;
+            const response = await MoodService.create(reqData);
 
-            const response = await MoodService.create(request);
-
-            res.status(200).json({
-                success : true,
-                data    : response
+            res.status(201).json({
+                data: response
             });
         } catch (error) {
-            console.error(error);
-            res.status(500).json({
-                success : false,
-                message : "Internal Server Error"
-            });
+            next(error);
         }
     }
 }

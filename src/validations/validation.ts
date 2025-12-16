@@ -5,3 +5,4 @@ export class Validation{
         return schema.parse(data) as T
     }
 }
+
