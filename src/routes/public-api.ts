@@ -19,13 +19,26 @@ publicRouter.get("/meditations/:id", MeditationController.getById);
 publicRouter.get("/meditations/:id/stream", (req, res) => {
   const { id } = req.params;
 
-  // SEMENTARA: samakan dengan nama file asli kamu
-  // kalau nanti sudah pakai DB, ini tinggal ambil dari url_audio
+  // Map ID ke nama file audio
+  const fileMap: { [key: string]: string } = {
+    "1": "Ripples of Past Reverie.mp3",
+    "2": "medisong2.mp3"
+  };
+
+  const fileName = fileMap[id];
+
+  if (!fileName) {
+    return res.status(404).json({
+      status: "error",
+      message: "Audio file not found - invalid ID",
+    });
+  }
+
   const audioPath = path.join(
     process.cwd(),
     "uploads",
     "meditation",
-    "Ripples of Past Reverie.mp3"
+    fileName
   );
 
   if (!fs.existsSync(audioPath)) {
