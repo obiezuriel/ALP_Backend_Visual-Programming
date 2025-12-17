@@ -1,30 +1,15 @@
-import { Meditation } from "../models/meditation-model";
+import { Meditation_Song } from "../../generated/prisma";
+import { prismaClient } from "../utils/database-util";
 
 export class MeditationService {
 
-  static async getAll(): Promise<Meditation[]> {
-    return [
-      {
-        id: 1,
-        title: "Ripples of Past Reverie",
-        duration: 45,
-        description: "A soothing meditation experience with ambient sounds.",
-        audioUrl: "http://10.0.2.2:3000/api/meditations/1/stream",
-        coverImage: "https://example.com/image/ripples-of-past-reverie.png"
-      },
-      {
-        id: 2,
-        title: "Calm Water Ripples",
-        duration: 40,
-        description: "Let the gentle ripples guide you to inner peace.",
-        audioUrl: "http://10.0.2.2:3000/api/meditations/2/stream",
-        coverImage: "https://example.com/image/calm-water-ripples.png"
-      }
-    ];
+  static async getAll(): Promise<Meditation_Song[]> {
+    return await prismaClient.meditation_Song.findMany();
   }
 
-  static async getById(id: string): Promise<Meditation | null> {
-    const data = await this.getAll();
-    return data.find(item => item.id === Number(id)) || null;
+  static async getById(id: string): Promise<Meditation_Song | null> {
+    return await prismaClient.meditation_Song.findUnique({
+      where: { id: Number(id) }
+    });
   }
 }

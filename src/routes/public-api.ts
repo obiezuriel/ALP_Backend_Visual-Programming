@@ -47,7 +47,8 @@ publicRouter.get("/meditations/:id/stream", (req, res) => {
       message: "Audio file not found",
     });
   }
-
+  
+//cek range music
   const stat = fs.statSync(audioPath);
   const fileSize = stat.size;
   const range = req.headers.range;
