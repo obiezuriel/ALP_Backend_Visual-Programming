@@ -19,13 +19,18 @@ publicRouter.get("/meditations/:id", MeditationController.getById);
 publicRouter.get("/meditations/:id/stream", (req, res) => {
   const { id } = req.params;
 
-  // Map ID ke nama file audio
+  // Map ID ke nama file audio asli
   const fileMap: { [key: string]: string } = {
     "1": "Ripples of Past Reverie.mp3",
-    "2": "medisong2.mp3"
+    "2": "Calm Water Ripples.mp3",
+    "3": "A Promise.mp3",
+    "4": "Moonlight.mp3",
+    "5": "Winter.mp3",
+    "6": "Downpour.mp3"
   };
 
   const fileName = fileMap[id];
+  console.log(`[Stream] ID: ${id}, FileName: ${fileName}`);
 
   if (!fileName) {
     return res.status(404).json({
@@ -41,14 +46,16 @@ publicRouter.get("/meditations/:id/stream", (req, res) => {
     fileName
   );
 
+  console.log(`[Stream] Path: ${audioPath}`);
+  console.log(`[Stream] Exists: ${fs.existsSync(audioPath)}`);
+
   if (!fs.existsSync(audioPath)) {
     return res.status(404).json({
       status: "error",
-      message: "Audio file not found",
+      message: `Audio file not found: ${fileName}`,
     });
   }
   
-//cek range music
   const stat = fs.statSync(audioPath);
   const fileSize = stat.size;
   const range = req.headers.range;

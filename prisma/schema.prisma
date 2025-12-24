@@ -68,7 +68,6 @@ model Meditation_Song{
   description String
   artist String
   duration Int
-  audioUrl String @map("audio_url")
   coverImage String @map("cover_image")
 
   user_id Int
