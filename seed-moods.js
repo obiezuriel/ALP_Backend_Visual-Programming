@@ -1,7 +1,9 @@
-import { Mood_Type } from "../../generated/prisma";
+const { PrismaClient, Mood_Type } = require('./generated/prisma');
 
-export const AFFIRMATION_DATA: Record<Mood_Type, string[]> = {
-    [Mood_Type.HAPPY]: [
+const prisma = new PrismaClient();
+
+const affirmationsData = {
+    HAPPY: [
         "Your smile is contagious! Keep shining.",
         "Enjoy this happiness, you deserve it.",
         "Your positive energy is amazing today.",
@@ -11,8 +13,7 @@ export const AFFIRMATION_DATA: Record<Mood_Type, string[]> = {
         "Keep spreading these positive vibes!",
         "You're the reason someone smiled today."
     ],
-
-    [Mood_Type.SAD]: [
+    SAD: [
         "It's okay to be sad, it's only human.",
         "The storm will pass, sending you a hug!",
         "Take some rest, we'll try again tomorrow.",
@@ -22,8 +23,7 @@ export const AFFIRMATION_DATA: Record<Mood_Type, string[]> = {
         "Take your time, you don't have to be okay all the time.",
         "Every day is a new page, tomorrow can be better."
     ],
-
-    [Mood_Type.NEUTRAL]: [
+    NEUTRAL: [
         "A peaceful day is a blessing.",
         "Take it easy today.",
         "Focus on the little good things.",
@@ -34,3 +34,36 @@ export const AFFIRMATION_DATA: Record<Mood_Type, string[]> = {
         "Take a deep breath, you're doing your best."
     ]
 };
+
+async function main() {
+    console.log('Seeding moods and affirmations...');
+
+    for (const moodType of Object.values(Mood_Type)) {
+        const mood = await prisma.mood.upsert({
+            where: { type: moodType },
+            update: {},
+            create: {
+                type: moodType,
+                affirmations: {
+                    create: affirmationsData[moodType].map(message => ({
+                        message: message
+                    }))
+                }
+            }
+        });
+        console.log(`Created mood: ${mood.type}`);
+    }
+
+    console.log('Seeding completed!');
+    console.log('- 3 Moods (HAPPY, SAD, NEUTRAL)');
+    console.log('- 24 Affirmations (8 per mood)');
+}
+
+main()
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });

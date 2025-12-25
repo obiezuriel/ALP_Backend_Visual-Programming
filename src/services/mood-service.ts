@@ -1,32 +1,24 @@
 import { prismaClient } from "../utils/database-util";
-import { CreateMoodRequest, MoodResponse, toMoodResponse } from '../models/mood-model';
-import { AFFIRMATION_DATA } from '../utils/affirmation-words-util';
+import { CreateMoodRequest, toMoodResponse } from "../models/mood-model";
 
 export const MoodService = {
-    async create(request: CreateMoodRequest): Promise<MoodResponse> {
-        //ambil dari util
-        const possibleMessages = AFFIRMATION_DATA[request.mood_type];
-
-        //randomizer
-        const randomIndex = Math.floor(Math.random() * possibleMessages.length);
-        const selectedMessage = possibleMessages[randomIndex];
-
-        //simpan ke db
-        const result = await prismaClient.mood.create({
-            data: {
-                user_id: request.user_id,
-                type: request.mood_type,
-                affirmations: {
-                    create: {
-                        message: selectedMessage
-                    }
-                }
-            },
-            include: {
-                affirmations: true
-            }
+    async create(request: CreateMoodRequest) {
+        //cek mood_type
+        const mood = await prismaClient.mood.findUnique({
+            where: { type: request.mood_type },
+            include: { affirmations: true }
         });
 
-        return toMoodResponse(result);
+        if (!mood) {
+            throw new Error("Mood type not found");
+        }
+
+        //randomizer
+        const affirmations = mood.affirmations;
+        const randomIndex = Math.floor(Math.random() * affirmations.length);
+        const selectedAffirmation = affirmations[randomIndex];
+
+        //return response
+        return toMoodResponse(mood, selectedAffirmation);
     }
 };
