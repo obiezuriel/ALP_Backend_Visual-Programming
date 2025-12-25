@@ -11,12 +11,10 @@ export interface MoodResponse {
     affirmation_text: string;
 }
 
-type MoodWithAffirmations = Mood & { affirmations: Affirmation[] };
-
-export function toMoodResponse(mood: MoodWithAffirmations): MoodResponse {
+export function toMoodResponse(mood: Mood, affirmation: Affirmation): MoodResponse {
     return {
         id: mood.id,
         mood_type: mood.type,
-        affirmation_text: mood.affirmations[0]?.message || "No affirmation found"
+        affirmation_text: affirmation.message
     };
 }

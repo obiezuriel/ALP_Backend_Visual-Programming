@@ -8,17 +8,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Mood_Type{
-  HAPPY
-  SAD
-  NEUTRAL
-}
-
 model User {
   id    Int    @id @default(autoincrement())
   name  String
 
-  mood_logs        Mood[] 
   journals         Journal[]
   meditation_songs Meditation_Song[]
   favorites        Favorite[] 
@@ -27,25 +20,20 @@ model User {
 }
 
 model Mood {
-  id          Int @id @default(autoincrement())
-  type        Mood_Type
-  created_at  DateTime  @default(now())
-
+  id           Int       @id @default(autoincrement())
+  type         Mood_Type @unique
+  
   affirmations Affirmation[]
-
-  user_id Int
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("moods") 
 }
 
 model Affirmation {
-  id Int @id @default(autoincrement())
+  id      Int @id @default(autoincrement())
   message String
-
   mood_id Int
 
-  mood Mood @relation(fields: [mood_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  mood Mood @relation(fields: [mood_id], references: [id], onDelete: Cascade)
 
   @@map("affirmations")
 }
@@ -89,4 +77,10 @@ model Favorite {
 
   @@unique([user_id, affirmation_text])
   @@map("favorites") 
+}
+
+enum Mood_Type {
+  HAPPY
+  SAD
+  NEUTRAL
 }
