@@ -1,8 +1,9 @@
 export type Meditation = {
   id: number;
   title: string;
-  duration: number; // dalam menit
+  duration: number;
   description: string;
-  audioUrl: string;
+  artist: string;
   coverImage: string;
+  user_id: number;
 };
