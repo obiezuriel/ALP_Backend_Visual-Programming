@@ -36,7 +36,14 @@ const affirmationsData = {
 };
 
 async function main() {
-    console.log('Seeding moods and affirmations...');
+    console.log('Seeding user, moods and affirmations...');
+
+    await prisma.user.upsert({
+        where: { id: 1 },
+        update: {},
+        create: { id: 1, name: "Test User" }
+    });
+    console.log('Created user: Test User');
 
     for (const moodType of Object.values(Mood_Type)) {
         const mood = await prisma.mood.upsert({
@@ -55,6 +62,7 @@ async function main() {
     }
 
     console.log('Seeding completed!');
+    console.log('- 1 User');
     console.log('- 3 Moods (HAPPY, SAD, NEUTRAL)');
     console.log('- 24 Affirmations (8 per mood)');
 }
